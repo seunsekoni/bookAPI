@@ -21,11 +21,6 @@ const boookSchema = mongoose.Schema({
         required:false,
     },
 
-    averageRating: {
-        type: Number,
-        required: false
-    },
-
     createdAt: {
         type: Date,
         default: Date.now,

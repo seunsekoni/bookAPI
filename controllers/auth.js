@@ -68,10 +68,8 @@ exports.login = (req, res) => {
 
 exports.hasAuthorization = async (req, res, next) => {
     const authHeader = req.headers.authorization;
-
     if (authHeader) {
         const token = authHeader.split(' ')[1];
-
         jwt.verify(token, process.env.JWT_TOKEN, async(err, user) => {
             if (err) {
                 return res.sendStatus(403);
@@ -88,7 +86,7 @@ exports.hasAuthorization = async (req, res, next) => {
                 
                 // append the user details to the request
                 req.authUser = user
-
+            
             })
             next();
         });
