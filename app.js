@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
+dotenv.config();
 const cors = require('cors')
 const mongoose = require('mongoose');
 const morgan = require('morgan');
@@ -9,7 +10,6 @@ const authRoute = require('./routes/auth')
 const bookRoute = require('./routes/book')
 
 
-dotenv.config();
 const port = process.env.PORT || 4000
 
 // Connect to MongoDB
