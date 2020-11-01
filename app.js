@@ -17,7 +17,7 @@ mongoose
   .connect(
     // `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/node-api`,
     // 'mongodb://root:root@mongo:27017/getdevproject',
-    `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/?authSource=admin`,
+    `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DATABASE_URL}`,
     { useNewUrlParser: true,
       useUnifiedTopology: true,
      }
