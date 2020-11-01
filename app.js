@@ -51,13 +51,13 @@ app.use(function (err, req, res, next) {
   }
 });
 
-app.set('port', port, () => {
-  console.log(`App listening to port ${port}`)
-})
-
-// app.listen(port, () => {
-//     console.log(`App listening to port ${port}`)
+// app.set('port', port, () => {
+//   console.log(`App listening to port ${port}`)
 // })
+
+app.listen(port, () => {
+    console.log(`App listening to port ${port}`)
+})
 
 app.get('/',(req, res) => {
     res.send({
