@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
-dotenv.config();
 const cors = require('cors')
 const mongoose = require('mongoose');
 const morgan = require('morgan');
@@ -11,13 +10,15 @@ const bookRoute = require('./routes/book')
 
 
 const port = process.env.PORT || 4000
+dotenv.config();
 
 // Connect to MongoDB
 mongoose
   .connect(
     // `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/node-api`,
-    // 'mongodb://root:root@mongo:27017/getdevproject',
-    `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DATABASE_URL}`,
+    // book-api.pj5n0.mongodb.net/<dbname>
+    // `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DATABASE_URL}`,
+    `mongodb+srv://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DATABASE_URL}`,
     { useNewUrlParser: true,
       useUnifiedTopology: true,
      }
