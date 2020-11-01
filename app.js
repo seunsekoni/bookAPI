@@ -10,7 +10,7 @@ const bookRoute = require('./routes/book')
 
 
 dotenv.config();
-const port = 4000
+const port = process.env.PORT || 4000
 
 // Connect to MongoDB
 mongoose
@@ -50,10 +50,13 @@ app.use(function (err, req, res, next) {
   }
 });
 
-
-app.listen(port, () => {
-    console.log(`App listening to port ${port}`)
+app.set('port', port, () => {
+  console.log(`App listening to port ${port}`)
 })
+
+// app.listen(port, () => {
+//     console.log(`App listening to port ${port}`)
+// })
 
 app.get('/',(req, res) => {
     res.send({
