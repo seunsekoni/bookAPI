@@ -16,7 +16,7 @@ dotenv.config();
 if(process.env.NODE_ENV === "test") {
   mongoose
     .connect(
-      `mongodb+srv://root:root@book-api.pj5n0.mongodb.net/book-api-test?retryWrites=true&w=majority`,
+      `${process.env.TEST_DATABASE_URL}`,
       { useNewUrlParser: true,
         useUnifiedTopology: true,
        }
@@ -31,11 +31,7 @@ if(process.env.NODE_ENV === "test") {
 } else {
   mongoose
     .connect(
-      // `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/node-api`,
-      // book-api.pj5n0.mongodb.net/<dbname>
       `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DATABASE_URL}`,
-      // `mongodb+srv://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DATABASE_URL}`,
-      // `mongodb+srv://root:root@book-api.pj5n0.mongodb.net/book-api?retryWrites=true&w=majority`,
       { useNewUrlParser: true,
         useUnifiedTopology: true,
        }
