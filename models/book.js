@@ -28,7 +28,8 @@ const boookSchema = mongoose.Schema({
 
     createdBy: {
         type: ObjectId,
-        ref: "User"
+        ref: "User",
+        required: false
     },
 
     updatedAt: Date

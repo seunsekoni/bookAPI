@@ -49,8 +49,13 @@ exports.fetchBooks = async(req, res) => {
 }
 
 // create books 
-exports.createBook = async (req, res, next) => {
-    let saveBook = await this.saveBookToDb(req.body);
+exports.createBook = async (req, res) => {
+
+    let book = req.body
+    
+    // attach the logged in user id to the created book
+    book.createdBy = req.authUser._id
+    let saveBook = await this.saveBookToDb(book);
     if(saveBook) {
         return res.json({
             success: true,
@@ -72,12 +77,16 @@ exports.createOneRandomBook = async(req, res, next) => {
         averageRating: faker.random.number(),
     }
     try {
-        let saveRandomBank = await this.saveBookToDb(randomBook);
-        if(saveRandomBank) {
+        // let saveRandomBook = await this.saveBookToDb(randomBook);
+        let saveRandomBook = new Book(randomBook);
+
+        // attach the userId to the book
+        saveRandomBook.createdBy = req.authUser._id
+        if(saveRandomBook) {
             return res.json({
                 success: true,
                 message:"Successfully created book randomly",
-                data: saveRandomBank,
+                data: saveRandomBook,
             })
         }
     } catch (error) {
@@ -87,32 +96,11 @@ exports.createOneRandomBook = async(req, res, next) => {
     
 }
 
-exports.createManyRandomBook = async(numberOfData) => {
-    const randomBook = {
-        name: faker.commerce.productName(),
-        author: faker.name.findName(),
-        publishedDate: faker.date.past(),
-        averageRating: faker.random.number(),
-    }
-
-    try {
-        for (let index = 0; index < numberOfData; index++) {
-        
-        
-        }
-        let saveRandomBank = await this.saveBookToDb(randomBook);
-        if(saveRandomBank) {
-            return res.json({
-                success: true,
-                message:"Successfully created book randomly",
-                data: saveRandomBank,
-            })
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
+/**
+ * save the new book to the DB
+ * @param {*} body 
+ * @return Promise
+ */
 exports.saveBookToDb = async body => {
     let book = await new Book(body);
     return new Promise((resolve, reject) => {
@@ -128,23 +116,34 @@ exports.saveBookToDb = async body => {
     })
 }
 
-// update books
+/**
+ * find a book by a valid book id
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @param {*} id 
+ */
 exports.fetchBookById = async(req, res, next, id) => {
     await Book.findById(id)
-                    .populate('createdBy', '_id name author')
-                    .exec((err, result) => {
-                        
-                        if(!result || err) {
-                            return res.status(403).json({
-                                error: err
-                            })
-                        }
-                        // append the book details to the request
-                        req.book = result
-                        next();
-                    })
+                .populate('createdBy', '_id name author')
+                .exec((err, result) => {
+                    
+                    if(!result || err) {
+                        return res.status(403).json({
+                            error: err
+                        })
+                    }
+                    // append the book details to the request
+                    req.book = result
+                    next();
+                })
 }
 
+/**
+ * get a book detail
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.getBookDetail =  (req, res) => {
     try {
         let book = req.book;
@@ -170,6 +169,7 @@ exports.getBookDetail =  (req, res) => {
                             }
                     }
                 ])
+                // find the id of the book from the calculated average array
                 const findAvg = avgRating.find(avg => avg._id.equals(req.book._id));
                 const average = findAvg.AverageValue
 
@@ -189,6 +189,11 @@ exports.getBookDetail =  (req, res) => {
 
 }
 
+/**
+ * Update a book detail
+ * @param {object} req - request
+ * @param {object} res - response
+ */
 exports.updateBookDetail = (req, res) => {
     
 
@@ -209,6 +214,11 @@ exports.updateBookDetail = (req, res) => {
     })
 }
 
+/**
+ * delete a book
+ * @param {object} req - request
+ * @param {object} res - response
+ */
 exports.deleteBook = (req, res) => {
   
 
@@ -241,9 +251,9 @@ exports.hasBookAuthorization = (req, res, next) => {
 }
 /**
  * Get the Id of the current authenticated user from the token sent for authorization
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {*} req - request
+ * @param {*} res - server response
+ * @param {*} next - next middleware
  */
 exports.getIdFromToken = async (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -259,7 +269,7 @@ exports.getIdFromToken = async (req, res, next) => {
                 // if user is not found
                 if(err || !user) {
                     return res.status(401).json({
-                        error: "Details not found"
+                        error: "Auth user details not found"
                     })
                 }
                 
@@ -276,7 +286,7 @@ exports.getIdFromToken = async (req, res, next) => {
 
 /**
  * Rate a book
- * @param  req 
+ * @param {object} req - request 
  * @param res 
  */
 exports.rateBook = async (req, res) => {

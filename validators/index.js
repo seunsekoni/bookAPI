@@ -30,7 +30,7 @@ const authRegistration = (req, res) => {
 const loginValidation = () => {
   return [
     // Email validations
-    check('email', "Title must not be blank").notEmpty(),
+    check('email', "Email must not be blank").notEmpty(),
     check('email', 'Email is required').notEmpty().isEmail()
           .matches(/.+\@.+\..+/)
           .withMessage("Email must contain the @ symbol"),
@@ -60,7 +60,6 @@ const createBookValidation = () => {
 
     // name validation
     check('publishedDate', "Book name is required").notEmpty()
-    // check('publishedDate', "Book name should not be less than 4 characters and more than 100 characters")
                     .isDate()
                     .trim().withMessage("Published date must be a valid date"),
   ]
